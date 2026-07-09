@@ -1,0 +1,44 @@
+#!/bin/bash
+set -e
+
+PROMETHEUS_VERSION="3.5.0"
+
+dnf update -y
+
+dnf install -y wget tar
+
+mkdir -p /opt/prometheus
+mkdir -p /etc/prometheus
+
+cd /tmp
+
+wget https://github.com/prometheus/prometheus/releases/download/v$PROMETHEUS_VERSION/prometheus-$PROMETHEUS_VERSION.linux-amd64.tar.gz
+tar -xzf prometheus-$PROMETHEUS_VERSION.linux-amd64.tar.gz
+
+useradd --no-create-home --shell /bin/false prometheus
+
+mkdir -p /etc/prometheus
+mkdir -p /var/lib/prometheus
+
+cp /tmp/prometheus-$PROMETHEUS_VERSION.linux-amd64/prometheus /usr/local/bin/
+cp /tmp/prometheus-$PROMETHEUS_VERSION.linux-amd64/promtool /usr/local/bin/
+
+chown prometheus:prometheus /usr/local/bin/prometheus
+chown prometheus:prometheus /usr/local/bin/promtool
+
+chown -R prometheus:prometheus /etc/prometheus
+chown -R prometheus:prometheus /var/lib/prometheus
+
+cat >/etc/prometheus/prometheus.yml <<PROM_CONFIG
+${prometheus_config}
+PROM_CONFIG
+
+cat > /etc/systemd/system/prometheus.service <<SERVICE
+${prometheus_service}
+SERVICE
+
+systemctl daemon-reload
+
+systemctl enable prometheus
+
+systemctl start prometheus

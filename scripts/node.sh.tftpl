@@ -1,0 +1,28 @@
+#!/bin/bash
+
+NODE_EXPORTER_VERSION="1.9.1"
+
+dnf update -y
+
+dnf install -y wget tar
+
+cd /tmp
+
+wget https://github.com/prometheus/node_exporter/releases/download/v$NODE_EXPORTER_VERSION/node_exporter-$NODE_EXPORTER_VERSION.linux-amd64.tar.gz
+
+tar -xzf node_exporter-$NODE_EXPORTER_VERSION.linux-amd64.tar.gz
+
+useradd --no-create-home --shell /bin/false node_exporter
+cp /tmp/node_exporter-$NODE_EXPORTER_VERSION.linux-amd64/node_exporter /usr/local/bin/
+
+chown node_exporter:node_exporter /usr/local/bin/node_exporter
+
+cat > /etc/systemd/system/node_exporter.service << EOF
+${node_exporter_service}
+EOF
+
+systemctl daemon-reload
+
+systemctl enable node_exporter
+
+systemctl start node_exporter

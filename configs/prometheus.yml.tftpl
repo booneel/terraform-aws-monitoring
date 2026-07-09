@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "node"
+
+    static_configs:
+      - targets:
+          - "${node1_private_ip}:9100"
+          - "${node2_private_ip}:9100"

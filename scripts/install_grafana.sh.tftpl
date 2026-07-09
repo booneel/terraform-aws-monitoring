@@ -1,0 +1,23 @@
+#!/bin/bash
+set -e
+
+cat >/etc/yum.repos.d/grafana.repo <<EOF
+[grafana]
+name=Grafana
+baseurl=https://rpm.grafana.com
+repo_gpgcheck=0
+enabled=1
+gpgcheck=1
+gpgkey=https://rpm.grafana.com/gpg.key
+sslverify=1
+EOF
+
+dnf clean all
+dnf makecache
+dnf install -y grafana
+
+systemctl daemon-reload
+
+systemctl enable grafana-server
+
+systemctl start grafana-server

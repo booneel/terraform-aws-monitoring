@@ -1,0 +1,21 @@
+#!/bin/bash
+set -e
+
+echo "[1/2] Install Prometheus"
+cat >/tmp/install_prometheus.sh <<'PROM'
+${install_prometheus}
+PROM
+
+chmod +x /tmp/install_prometheus.sh
+bash /tmp/install_prometheus.sh
+
+echo "[2/2] Install Grafana"
+cat >/tmp/install_grafana.sh <<'GRAFANA'
+${install_grafana}
+GRAFANA
+
+chmod +x /tmp/install_grafana.sh
+bash /tmp/install_grafana.sh
+
+echo "Done"
+
