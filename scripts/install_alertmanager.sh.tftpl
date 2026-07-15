@@ -1,0 +1,36 @@
+#!/bin/bash
+set -e
+
+ALERTMANAGER_VERSION="0.28.1"
+
+dnf install -y wget tar
+
+mkdir -p /etc/alertmanager
+mkdir -p /var/lib/alertmanager
+
+cd /tmp
+
+wget https://github.com/prometheus/alertmanager/releases/download/v$ALERTMANAGER_VERSION/alertmanager-$ALERTMANAGER_VERSION.linux-amd64.tar.gz
+
+tar -xzf alertmanager-$ALERTMANAGER_VERSION.linux-amd64.tar.gz
+
+useradd --no-create-home --shell /bin/false alertmanager
+
+cp /tmp/alertmanager-$ALERTMANAGER_VERSION.linux-amd64/alertmanager /usr/local/bin
+
+chown alertmanager:alertmanager /usr/local/bin/alertmanager
+
+chown -R alertmanager:alertmanager /etc/alertmanager
+chown -R alertmanager:alertmanager /var/lib/alertmanager
+
+cat >/etc/alertmanager/alertmanager.yml <<CONFIG
+${alertmanager_config}
+CONFIG
+
+cat >/etc/systemd/system/alertmanager.service <<SERVICE
+${alertmanager_service}
+SERVICE
+
+systemctl daemon-reload
+systemctl enable alertmanager
+systemctl start alertmanager

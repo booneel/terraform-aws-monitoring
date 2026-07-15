@@ -12,3 +12,13 @@ variable "key_name" {
   description = "My key pair ID"
   type        = string
 }
+
+variable "smtp_email" {
+  type      = string
+  sensitive = true
+}
+
+variable "smtp_password" {
+  type      = string
+  sensitive = true
+}

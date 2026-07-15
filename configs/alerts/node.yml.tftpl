@@ -1,0 +1,16 @@
+groups:
+  - name: node_alerts
+
+    rules:
+      - alert: NodeDown
+
+        expr: up == 0
+
+        for: 30s
+
+        labels:
+          severity: critical
+
+        annotations:
+          summary: "Node {{ $labels.node }} is down"
+          description: "Node Exporter has been unreachable for more than 30 seconds."

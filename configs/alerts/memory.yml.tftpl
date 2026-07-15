@@ -1,0 +1,17 @@
+groups:
+  - name: memory_alerts
+
+    rules:
+      - alert: HighMemoryUsage
+
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 90
+
+        for: 30s
+
+        labels:
+          severity: warning
+
+        annotations:
+          summary: "High memory usage on {{ $labels.node }}"
+          description: "Memory usage is above 90% for more than 30 seconds. Current usage: {{ printf \"%.2f\" $value }}%"
+

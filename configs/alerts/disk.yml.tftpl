@@ -1,0 +1,32 @@
+groups:
+  - name: disk_alerts
+
+    rules:
+      - alert: HighDiskUsage
+
+        expr: (
+                100 * (
+                  1 - (
+                    node_filesystem_avail_bytes{
+                      mountpoint="/",
+                      fstype!~"^(fuse.*|tmpfs|cifs|nfs)"
+                    }
+                    /
+                    node_filesystem_size_bytes{
+                      mountpoint="/",
+                      fstype!~"^(fuse.*|tmpfs|cifs|nfs)"
+                    }
+                  )
+                )
+              ) > 80
+              and on(instance, device, mountpoint)
+              node_filesystem_readonly == 0
+
+        for: 30s
+
+        labels:
+          severity: warning
+
+        annotations:
+          summary: "High disk usage on {{ $labels.node }}"
+          description: "Disk usage is above 80% for more than 30 seconds. Current usage: {{ printf \"%.2f\" $value }}%"

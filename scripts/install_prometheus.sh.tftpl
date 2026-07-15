@@ -9,6 +9,24 @@ dnf install -y wget tar
 
 mkdir -p /opt/prometheus
 mkdir -p /etc/prometheus
+mkdir -p /etc/prometheus/alerts
+
+cat >/etc/prometheus/alerts/cpu.yml <<'CPU'
+${cpu_alert}
+CPU
+
+cat >/etc/prometheus/alerts/memory.yml <<'MEMORY'
+${memory_alert}
+MEMORY
+
+cat >/etc/prometheus/alerts/disk.yml <<'DISK'
+${disk_alert}
+DISK
+
+cat >/etc/prometheus/alerts/node.yml <<'NODE'
+${node_alert}
+NODE
+
 
 cd /tmp
 

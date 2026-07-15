@@ -18,6 +18,26 @@ dnf install -y grafana
 
 systemctl daemon-reload
 
-systemctl enable grafana-server
+mkdir -p /etc/grafana/provisioning/dashboards
+mkdir -p /var/lib/grafana/dashboards
 
-systemctl start grafana-server
+cat >/etc/grafana/provisioning/datasources/datasource.yml <<'DATASOURCE'
+${grafana_datasource}
+DATASOURCE
+
+cat >/etc/grafana/provisioning/dashboards/dashboard.yml <<'DASHBOARD_PROVIDER'
+${grafana_dashboard_provider}
+DASHBOARD_PROVIDER
+
+printf '%s' '${grafana_dashboard}' \
+  | base64 --decode \
+  | gzip --decompress \
+  > /var/lib/grafana/dashboards/monitoring-dashboard.json
+
+python3 -m json.tool \
+  /var/lib/grafana/dashboards/monitoring-dashboard.json \
+  > /dev/null
+
+chown -R grafana:grafana /var/lib/grafana/dashboards
+
+systemctl enable --now grafana-server

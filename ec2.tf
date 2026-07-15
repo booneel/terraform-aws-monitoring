@@ -12,11 +12,34 @@ resource "aws_instance" "monitor" {
             node1_private_ip = aws_instance.node1.private_ip
             node2_private_ip = aws_instance.node2.private_ip
           }
-        ),
+        )
         prometheus_service = file("${path.module}/systemd/prometheus.service")
+        cpu_alert          = file("${path.module}/configs/alerts/cpu.yml.tftpl")
+        memory_alert       = file("${path.module}/configs/alerts/memory.yml.tftpl")
+        disk_alert         = file("${path.module}/configs/alerts/disk.yml.tftpl")
+        node_alert         = file("${path.module}/configs/alerts/node.yml.tftpl")
       }
     ),
-    install_grafana = file("${path.module}/scripts/install_grafana.sh.tftpl")
+    install_grafana = templatefile("${path.module}/scripts/install_grafana.sh.tftpl",
+      {
+        grafana_dashboard_provider = file("${path.module}/configs/grafana/dashboard.yml")
+        grafana_dashboard = base64gzip(
+          file("${path.module}/configs/grafana/monitoring-dashboard.json")
+        )
+        grafana_datasource = file("${path.module}/configs/grafana/datasource.yml")
+      }
+    ),
+    install_alertmanager = templatefile("${path.module}/scripts/install_alertmanager.sh.tftpl",
+      {
+        alertmanager_config = templatefile("${path.module}/configs/alertmanager.yml.tftpl",
+          {
+            smtp_email    = var.smtp_email
+            smtp_password = var.smtp_password
+          }
+        )
+        alertmanager_service = file("${path.module}/systemd/alertmanager.service")
+      }
+    ),
   })
   vpc_security_group_ids = [aws_security_group.monitor_sg.id]
 }

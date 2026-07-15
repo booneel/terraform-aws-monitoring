@@ -29,7 +29,13 @@ resource "aws_security_group" "monitor_sg" {
     protocol    = "tcp"
     cidr_blocks = [var.my_ip]
   }
-
+  ingress {
+    description = "Alertmanager"
+    from_port   = 9093
+    to_port     = 9093
+    protocol    = "tcp"
+    cidr_blocks = [var.my_ip]
+  }
   egress {
     from_port   = 0
     to_port     = 0
