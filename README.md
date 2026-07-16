@@ -1,6 +1,6 @@
 # AWS Infrastructure Monitoring Automation
 
-![Project Cover](docs/images/project-cover.png)
+![Project Cover](docs/demo/monitoring-demo-mock.gif)
 
 [![Terraform](https://img.shields.io/badge/Terraform-IaC-844FBA?logo=terraform&logoColor=white)](https://www.terraform.io/)
 [![AWS](https://img.shields.io/badge/AWS-EC2%20%7C%20VPC-FF9900?logo=amazonaws&logoColor=white)](https://aws.amazon.com/)
@@ -44,22 +44,6 @@ Prometheus와 Node Exporter를 통해 EC2의 CPU, Memory, Disk 사용률 및 Nod
 
 **Resource Load → Metric Collection → Alert Firing → Email Notification → Recovery → Resolved**
 
-<table>
-<tr>
-<td width="50%">
-
-**Grafana Dashboard**
-![Mock Grafana Dashboard](docs/images/grafana-dashboard-mock.png)
-
-</td>
-<td width="50%">
-
-**Alert Lifecycle**
-![Mock Alert Lifecycle](docs/images/alert-lifecycle-mock.png)
-
-</td>
-</tr>
-</table>
 
 <br>
 
