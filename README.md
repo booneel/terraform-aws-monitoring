@@ -1,6 +1,6 @@
 # AWS Infrastructure Monitoring Automation
 
-![Project Cover](docs/demo/grafana-dashboard)
+![Project Cover](docs/demo/grafana-dashboard.png)
 
 [![Terraform](https://img.shields.io/badge/Terraform-IaC-844FBA?logo=terraform&logoColor=white)](https://www.terraform.io/)
 [![AWS](https://img.shields.io/badge/AWS-EC2%20%7C%20VPC-FF9900?logo=amazonaws&logoColor=white)](https://aws.amazon.com/)
